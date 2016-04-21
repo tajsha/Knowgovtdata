@@ -18,4 +18,4 @@
 //= require_tree .
 //= require_self
 
-$.material.init()
+$.material.init();
