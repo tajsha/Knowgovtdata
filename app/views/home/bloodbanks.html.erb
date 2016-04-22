@@ -99,10 +99,10 @@
             var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=e16c75b6-7ee6-4ade-8e1f-2cd3043ff4c9&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[h_name]=asc&offset="+offset;
         }
         if(offset == 0){
-            $("#blood-banks ul").remove();
+            $("#blood-banks li").remove();
         }
         $.getJSON(api_url, function( data ) {
-            var items = [];
+            var items = $();
             $.each( data['records'], function( key, val ) {
                 var	elements= "<i class='large material-icons circle red'>add_location</i>";
                 if(val['h_name'] != "NA"){
@@ -155,16 +155,14 @@
                     elements += "<i class='material-icons'>place</i>: <a href='https://www.google.com/maps/@"+val['latitude']+","+val['longitude']+",16z'>Map Location</a><br>";
                 }
                 elements += "</p>";
-                items.push( "<li class='collection-item avatar' id='" + key + "'>" + elements + "</li>" );
+                items = items.add( "<li class='collection-item avatar' id='" + key + "'>" + elements + "</li>" );
             });
-
-            $( "<ul/>", {
-                "class": "my-new-list",
-                html: items.join( "" )
-            }).appendTo( "#blood-banks" );
+            $( "#blood-banks").append(items);
             $('#page').val(parseInt(offset)+1);
             if(data['count'] < 100){
                 $('#more').hide();
+            }else{
+                $('#more').show();
             }
         });
     }
