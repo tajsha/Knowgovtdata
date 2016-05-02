@@ -1,0 +1,187 @@
+<div class="container" id="main">
+  <div class="row">
+    <div class="col-md-4 col-sm-6">
+    </div>
+    <div class="col-md-4 col-sm-6">
+      <nav class="white" role="navigation" style="height:115px;">
+        <div class="nav-wrapper container">
+          <a id="logo-container" href="#" class="brand-logo center"><%= image_tag 'logo.png', alt: 'KnowGovtData' %></a>
+        </div>
+      </nav>
+      <nav>
+        <div class="nav-wrapper">
+          <div class="col s12">
+            <a href="/" class="breadcrumb">Home</a>
+            <a href="#!" class="breadcrumb">Hospitals</a>
+          </div>
+        </div>
+      </nav>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <select class="browser-default" id="states" style="width: 100%;"></select>
+          <select class="browser-default" id="districts" style="width: 100%; margin-top: 5px;"></select>
+        </div>
+        <div class="panel-body">
+          <ul class="collection" id="hospitals">
+          </ul>
+        </div>
+        <input type='hidden' id="page" value="0" />
+        <a class="btn btn-block btn-success" id="more" >More</a>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6">
+    </div>
+  </div><!--/row-->
+
+  <hr>
+</div><!--/main-->
+<script type="text/javascript">
+    var states = ["Andaman and Nicobar Islands","Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chandigarh",
+        "Chhattisgarh","Dadra and Nagar","Daman and Diu","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh",
+        "Jammu and Kashmir","Jharkhand","Karnataka","Kerala","Lakshadweep","Madhya Pradesh","Maharashtra","Manipur",
+        "Meghalaya","Mizoram","Nagaland","Odisha","Puducherry","Punjab","Rajasthan","Sikkim","Tamil Nadu","Tripura",
+        "Uttar Pradesh","Uttarakhand","West Bengal"]
+    var	districts = {"Andhra Pradesh":["Godavari","Hyderabad","Krishna","Secunderabad","Visakhapatnam"],
+        "Arunachal Pradesh":["Tawang","Upper Subansiri","lower Subansiri"],
+        "Assam":["Barpeta","Cachar","Dibrugarh","Jorhat","Kamrup","Sonitpur"],
+        "Bihar":["Darbhanga","Gaya","Muzaffarpur","Patna"],
+        "Chandigarh":[],"Chhattisgarh":["Bastar","Bilaspur","Durg","Raipur"],"Dadra and Nagar":[],"Daman and Diu":["Daman"],
+        "Delhi":["Central Delhi","East Delhi","East delhi","North Delhi","North East Delhi","North West Delhi","South Delhi","South East Delhi","South West Delhi","South West delhi","West Delhi","central Delhi"],
+        "Punjab":["Amritsar","Patiala","Ropar","Zirakpur"],"Rajasthan":["Ajmer","Jaipur","Jodhpur"],
+        "Sikkim":["Gangtok"],"Tamil Nadu":["Chennai","Chinna Seeragapadi","Colachel","Kanyakumari","Nagercoil","Vellore"],
+        "Tripura":["Agartala"],"Uttar Pradesh":["Agra","Ghaziabad","Greater Noida","Hathras","Kanpur","Lucknow","Meerut","Moradabad","Muzaffarnagar","Noida","Saharanpur","Varanasi"],
+        "Uttarakhand":["Dehradun","Haldwani","Rishikesh","Roorkee"],"West Bengal":["Kolkata"]}
+
+    $('#states').append($("<option></option>").attr("value",'All').text('All States'));
+    $('#districts').append($("<option></option>").attr("value",'All').text('All Districts'));
+    $.each(states, function(index, val) {
+        $('#states')
+                .append($("<option></option>")
+                        .attr("value",val)
+                        .text(val));
+    });
+    function updateDistricts(state){
+        $('#districts').find('option').remove();
+        $('#districts').append($("<option></option>").attr("value",'All').text('All Districts'));
+        $.each(districts, function(key, val) {
+            if(state == key){
+                $.each(val, function(index, dist) {
+                    $('#districts')
+                            .append($("<option></option>")
+                                    .attr("value",dist)
+                                    .text(dist));
+                });
+            }
+        });
+    }
+
+    function getResult(state, district, offset){
+        if(state != 'All' && district != 'All'){
+            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=7d208ae4-5d65-47ec-8cb8-2a7a7ac89f8c&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[Hospitalname]=asc&filters[state]="+state+"&filters[district]="+district+"&offset="+offset;
+        }else if(state != 'All' && district == 'All'){
+            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=7d208ae4-5d65-47ec-8cb8-2a7a7ac89f8c&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[Hospitalname]=asc&filters[state]="+state+"&offset="+offset;
+        }else{
+            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=7d208ae4-5d65-47ec-8cb8-2a7a7ac89f8c&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[Hospitalname]=asc&offset="+offset;
+        }
+        if(offset == 0){
+            $("#hospitals li").remove();
+        }
+        $.getJSON(api_url, function( data ) {
+            var items = $();
+            $.each( data['records'], function( key, val ) {
+                var	elements= "<i class='large material-icons circle red'>local_hospital</i>";
+                if(val['Hospitalname'] != "NA"){
+                    elements += "<span class='title'>"+ val['Hospitalname']+"</span><br>";
+                }
+                elements += "<p>";
+                if(val['HospitalCategory'] != "NA"){
+                    elements += "<b>Hospital Category:</b> "+ val['HospitalCategory']+"<br>";
+                }
+                if(val['Hostipalcaretype'] != "NA"){
+                    elements += "<b>Hostipal Caretype:</b> "+ val['Hostipalcaretype']+"<br>";
+                }
+                if(val['SystemsOfMedicine'] != "NA"){
+                    elements += "<b>Systems Of Medicine:</b> "+ val['SystemsOfMedicine']+"<br>";
+                }
+                if(val['AddressFirstLine'] != "NA"){
+                    elements += val['AddressFirstLine']+"<br>";
+                }
+                if(val['State'] != "NA"){
+                    elements += val['State']+"<br>";
+                }
+                if(val['District'] != "NA"){
+                    elements += val['District']+"<br>";
+                }
+                if(val['Subdristrict'] != "NA"){
+                    elements += val['Subdristrict']+"<br>";
+                }
+                if(val['Pincode'] != "NA"){
+                    elements += val['Pincode']+"<br>";
+                }
+                if(val['Telephone'] != "NA"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Telephone:</b> "+val['Telephone']+"<br>";
+                }
+                if(val['Mobilenumber'] != "NA"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Mobile Number:</b> "+val['Mobilenumber']+"<br>";
+                }
+                if(val['Emergencynum'] != "NA"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Emergency Number:</b> "+val['Emergencynum']+"<br>";
+                }
+                if(val['Ambulancephoneno'] != "NA"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Ambulance Phoneno:</b> "+val['Ambulancephoneno']+"<br>";
+                }
+                if(val['Tollfree'] != "NA"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Tollfree:</b> "+val['Tollfree']+"<br>";
+                }
+                if(val['Helpline'] != "NA"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Helpline:</b> "+val['Helpline']+"<br>";
+                }
+                if(val['Hospitalfax'] != "NA"){
+                    elements += "<b>Hospital Fax:</b> "+val['Hospitalfax']+"<br>";
+                }
+                if(val['Hospitalprimaryemailid'] != "NA"){
+                    elements += "<i class='material-icons'>email</i>: "+val['Hospitalprimaryemailid']+"<br>";
+                }
+                if(val['Hospitalsecondaryemailid'] != "NA"){
+                    elements += "<i class='material-icons'>email</i>: "+val['Hospitalsecondaryemailid']+"<br>";
+                }
+                if(val['Website'] != "NA"){
+                    elements += "<i class='material-icons'>language</i>: "+val['Website']+"<br>";
+                }
+                if(val['Specialties'] != "NA"){
+                    elements += "<b>Specialties:</b> "+val['Specialties']+"<br>";
+                }
+                if(val['Facilities'] != "NA"){
+                    elements += "<b>Facilities:</b> "+val['Facilities']+"<br>";
+                }
+                if(val['Totalnumofbeds'] != "NA"){
+                    elements += "<b>Total Number of Beds:</b> "+val['Totalnumofbeds']+"<br>";
+                }
+                if(val['Googlemapcorridinatelati'] != "NA" && val['Googlemapcorridinatelongi'] != "NA"){
+                    elements += "<i class='material-icons'>place</i>: <a href='https://www.google.com/maps/@"+val['Googlemapcorridinatelati']+","+val['Googlemapcorridinatelongi']+",16z'>Map Location</a><br>";
+                }
+                elements += "</p>";
+                items = items.add( "<li class='collection-item avatar' id='" + key + "'>" + elements + "</li>" );
+            });
+            $( "#hospitals").append(items);
+            $('#page').val(parseInt(offset)+1);
+            if(data['count'] < 100){
+                $('#more').hide();
+            }else{
+                $('#more').show();
+            }
+        });
+    }
+    getResult('All', 'All', 0);
+    $('#more').on('click', function(){
+        getResult($('#states').val(), $('#districts').val(), $('#page').val());
+    });
+    $('#states').on('change', function(){
+        updateDistricts(this.value);
+        getResult($('#states').val(), $('#districts').val(), 0)
+    });
+
+    $('#districts').on('change', function(){
+        getResult($('#states').val(), $('#districts').val(), 0)
+    });
+</script>
