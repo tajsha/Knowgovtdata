@@ -1,0 +1,174 @@
+<div class="container" id="main">
+  <div class="row">
+    <div class="col-md-4 col-sm-6">
+    </div>
+    <div class="col-md-4 col-sm-6">
+      <nav class="white" role="navigation" style="height:115px;">
+        <div class="nav-wrapper container">
+          <a id="logo-container" href="#" class="brand-logo center"><%= image_tag 'logo.png', alt: 'KnowGovtData' %></a>
+        </div>
+      </nav>
+      <nav>
+        <div class="nav-wrapper">
+          <div class="col s12">
+            <a href="/" class="breadcrumb">Home</a>
+            <a href="#!" class="breadcrumb">Pincodes</a>
+          </div>
+        </div>
+      </nav>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <select class="browser-default" id="states" style="width: 100%;"></select>
+          <select class="browser-default" id="districts" style="width: 100%; margin-top: 5px;"></select>
+          <select class="browser-default" id="taluks" style="width: 100%; margin-top: 5px;"></select>
+        </div>
+        <div class="panel-body">
+          <ul class="collection" id="pincodes">
+          </ul>
+        </div>
+        <input type='hidden' id="page" value="0" />
+        <a class="btn btn-block btn-success" id="more" >More</a>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6">
+    </div>
+  </div><!--/row-->
+
+  <hr>
+</div><!--/main-->
+<%= javascript_tag "states = #{@states.to_json.html_safe};" %>
+<%= javascript_tag "districts = #{@districts.to_json.html_safe};" %>
+<%= javascript_tag "taluks = #{@taluks.to_json.html_safe};" %>
+<script type="text/javascript">
+    $('#states').append($("<option></option>").attr("value",'All').text('All States'));
+    $('#districts').append($("<option></option>").attr("value",'All').text('All Districts'));
+    $('#taluks').append($("<option></option>").attr("value",'All').text('All Taluks'));
+    $.each(states, function(index, val) {
+        $('#states')
+                .append($("<option></option>")
+                        .attr("value",val)
+                        .text(val));
+    });
+    function updateDistricts(state){
+        $('#districts').find('option').remove();
+        $('#districts').append($("<option></option>").attr("value",'All').text('All Districts'));
+        $('#taluks').find('option').remove();
+        $('#taluks').append($("<option></option>").attr("value",'All').text('All Taluks'));
+        $.each(districts, function(key, val) {
+            if(state == key){
+                $.each(val, function(index, dist) {
+                    $('#districts')
+                            .append($("<option></option>")
+                                    .attr("value",dist)
+                                    .text(dist));
+                });
+            }
+        });
+    }
+
+    function updateDistrictsTaluks(state, district){
+        $('#taluks').find('option').remove();
+        $('#taluks').append($("<option></option>").attr("value",'All').text('All Taluks'));
+        $.each(taluks, function(key, val) {
+            if(state == key){
+                $.each(val, function(key1, val1) {
+                    if(district == key1){
+                        $.each(val1, function(index, taluk) {
+                            $('#taluks')
+                                    .append($("<option></option>")
+                                            .attr("value",taluk)
+                                            .text(taluk));
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    function getResult(state, district, taluk, offset){
+        if(state != 'All' && district != 'All' && taluk != 'All'){
+            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=0a076478-3fd3-4e2c-b2d2-581876f56d77&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[taluk]=asc&filters[statename]="+state+"&filters[districtname]="+district+"&filters[taluk]="+taluk+"&offset="+offset;
+        }else if(state != 'All' && district != 'All' && taluk == 'All'){
+            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=0a076478-3fd3-4e2c-b2d2-581876f56d77&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[taluk]=asc&filters[statename]="+state+"&filters[districtname]="+district+"&offset="+offset;
+        }else if(state != 'All' && district == 'All' && taluk == 'All'){
+            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=0a076478-3fd3-4e2c-b2d2-581876f56d77&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[taluk]=asc&filters[statename]="+state+"&offset="+offset;
+        }else{
+            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=0a076478-3fd3-4e2c-b2d2-581876f56d77&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[taluk]=asc&offset="+offset;
+        }
+        if(offset == 0){
+            $("#pincodes li").remove();
+        }
+        $.getJSON(api_url, function( data ) {
+            var items = $();
+            $.each( data['records'], function( key, val ) {
+                var	elements= "<i class='large material-icons circle red'>email</i>";
+                if(val['pincode'] != "NA"){
+                    elements += "<span class='title'><b>Pincode:</b> "+ val['pincode']+"</span><br>";
+                }
+                elements += "<p>";
+                if(val['officename'] != "NA"){
+                    elements += "<b>Office Name:</b> "+ val['officename']+"<br>";
+                }
+                if(val['officeType'] != "NA"){
+                    elements += "<b>Office Type:</b> "+ val['officeType']+"<br>";
+                }
+                if(val['Deliverystatus'] != "NA"){
+                    elements += "<b>Delivery Status:</b> "+ val['Deliverystatus']+"<br>";
+                }
+                if(val['divisionname'] != "NA"){
+                    elements += "<b>Division Name:</b> "+ val['divisionname']+"<br>";
+                }
+                if(val['regionname'] != "NA"){
+                    elements += "<b>Region Name:</b> "+ val['regionname']+"<br>";
+                }
+                if(val['circlename'] != "NA"){
+                    elements += "<b>Circle Name:</b> "+ val['circlename']+"<br>";
+                }
+                if(val['Taluk'] != "NA"){
+                    elements += "<b>Taluk:</b> "+ val['Taluk']+"<br>";
+                }
+                if(val['Districtname'] != "NA"){
+                    elements += "<b>District Name:</b> "+ val['Districtname']+"<br>";
+                }
+                if(val['statename'] != "NA"){
+                    elements += "<b>State Name:</b> "+ val['statename']+"<br>";
+                }
+                if(val['Telephone'] != "NA"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Mobile Number:</b> "+val['Telephone']+"<br>";
+                }
+                if(val['Related Suboffice'] != "NA"){
+                    elements += "<b>Related Suboffice:</b> "+ val['Related Suboffice']+"<br>";
+                }
+                if(val['Related Headoffice'] != "NA"){
+                    elements += "<b>Related Headoffice:</b> "+ val['Related Headoffice']+"<br>";
+                }
+                elements += "</p>";
+                items = items.add( "<li class='collection-item avatar' id='" + key + "'>" + elements + "</li>" );
+            });
+            $( "#pincodes").append(items);
+            $('#page').val(parseInt(offset)+1);
+            if(data['count'] < 100){
+                $('#more').hide();
+            }else{
+                $('#more').show();
+            }
+        });
+    }
+    getResult('All', 'All', 'All', 0);
+    $('#more').on('click', function(){
+        getResult($('#states').val(), $('#districts').val(), $('#taluks').val(), $('#page').val());
+    });
+    $('#states').on('change', function(){
+        updateDistricts(this.value);
+        getResult($('#states').val(), $('#districts').val(), $('#taluks').val(), 0)
+    });
+
+    $('#districts').on('change', function(){
+        updateDistrictsTaluks($('#states').val(), this.value);
+        getResult($('#states').val(), $('#districts').val(), $('#taluks').val(), 0)
+    });
+
+    $('#taluks').on('change', function(){
+        getResult($('#states').val(), $('#districts').val(), $('#taluks').val(), 0)
+    });
+</script>

@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  timestamp: 1
+  office_name: MyString
+  pincode: MyString
+  office_type: MyString
+  delivery_status: MyString
+  division_name: MyString
+  region_name: MyString
+  circle_name: MyString
+  taluk: MyString
+  district_name: MyString
+  state_name: MyString
+  telephone: MyString
+  related_sub_office: MyString
+  related_head_office: MyString
+
+two:
+  timestamp: 1
+  office_name: MyString
+  pincode: MyString
+  office_type: MyString
+  delivery_status: MyString
+  division_name: MyString
+  region_name: MyString
+  circle_name: MyString
+  taluk: MyString
+  district_name: MyString
+  state_name: MyString
+  telephone: MyString
+  related_sub_office: MyString
+  related_head_office: MyString
