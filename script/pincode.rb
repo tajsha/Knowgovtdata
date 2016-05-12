@@ -1,6 +1,6 @@
 require 'net/http'
 require 'json'
-i=800
+i=1300
 stop = false
 taluks = {}
 while(stop == false) do
