@@ -1,6 +1,6 @@
 require 'net/http'
 require 'json'
-i=0
+i=600
 stop = false
 taluks = {}
 while(stop == false) do
@@ -10,7 +10,6 @@ while(stop == false) do
   result =  JSON.parse(response)
   puts i
   result['records'].uniq.each{|v|
-    puts v.inspect
    Pincode.find_or_create_by(:timestamp => v['timestamp'], :office_name => v['officename'], :pincode => v['pincode'],
                              :office_type => v['officeType'], :delivery_status => v['Deliverystatus'], :division_name => v['divisionname'],
                              :region_name => v['regionname'], :circle_name => v['circlename'], :taluk => v['Taluk'],
