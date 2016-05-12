@@ -3,6 +3,12 @@
     <div class="col-md-4 col-sm-6">
     </div>
     <div class="col-md-4 col-sm-6">
+      <div
+      class="fb-like"
+      data-share="true"
+      data-width="450"
+      data-show-faces="true">
+      </div>
       <nav class="white" role="navigation" style="height:115px;">
         <div class="nav-wrapper container">
           <a id="logo-container" href="#" class="brand-logo center"><%= image_tag 'logo.png', alt: 'KnowGovtData' %></a>
@@ -183,5 +189,23 @@
 
     $('#districts').on('change', function(){
         getResult($('#states').val(), $('#districts').val(), 0)
+    });
+
+    $(document).ready(function(){
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '994047617314949',
+                xfbml      : true,
+                version    : 'v2.6'
+            });
+        };
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
     });
 </script>

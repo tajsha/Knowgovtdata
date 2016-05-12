@@ -8,7 +8,6 @@ class HomeController < ApplicationController
     @districts = {}
     @taluks = {}
     results.each{|r|
-      puts r.inspect
       states << r.state_name
       @districts[r.state_name] = [] unless @districts[r.state_name].present?
       @districts[r.state_name] << r.district_name
