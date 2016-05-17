@@ -47,3 +47,5 @@ end
 gem 'bootstrap-material-design'
 gem 'material_icons'
 
+gem 'sitemap_generator'
+
