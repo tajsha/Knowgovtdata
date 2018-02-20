@@ -2,6 +2,11 @@ class HomeController < ApplicationController
   def index
   end
 
+  def bloodbanks
+    @state_names = State.all.map(&:name).sort
+    @district_names = State.includes(:districts).all.inject({}){|h, s| h[s.name] = s.districts.map(&:name); h}
+  end
+
   def pincodes
     results = Pincode.select(:state_name, :district_name, :taluk).all.uniq.compact
     states = []
