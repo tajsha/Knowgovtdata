@@ -3,8 +3,8 @@ class HomeController < ApplicationController
   end
 
   def bloodbanks
-    @state_names = State.all.map(&:name).sort
-    @district_names = State.includes(:districts).all.inject({}){|h, s| h[s.name] = s.districts.map(&:name); h}
+    #@state_names = State.all.map(&:name).sort
+    #@district_names = State.includes(:districts).all.inject({}){|h, s| h[s.name] = s.districts.map(&:name); h}
   end
 
   def pincodes
