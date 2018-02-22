@@ -93,13 +93,13 @@
 
     function getResult(state, district, taluk, offset){
         if(state != 'All' && district != 'All' && taluk != 'All'){
-            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=0a076478-3fd3-4e2c-b2d2-581876f56d77&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[taluk]=asc&filters[statename]="+state+"&filters[districtname]="+district+"&filters[taluk]="+taluk+"&offset="+offset;
+            var api_url = "https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-21841576b2f6?format=json&api-key=579b464db66ec23bdd000001915ff135a4c244e75f6371e952361b24&sort[taluk]=asc&filters[statename]="+state+"&filters[districtname]="+district+"&filters[taluk]="+taluk+"&offset="+offset;
         }else if(state != 'All' && district != 'All' && taluk == 'All'){
-            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=0a076478-3fd3-4e2c-b2d2-581876f56d77&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[taluk]=asc&filters[statename]="+state+"&filters[districtname]="+district+"&offset="+offset;
+            var api_url = "https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-21841576b2f6?format=json&api-key=579b464db66ec23bdd000001915ff135a4c244e75f6371e952361b24&sort[taluk]=asc&filters[statename]="+state+"&filters[districtname]="+district+"&offset="+offset;
         }else if(state != 'All' && district == 'All' && taluk == 'All'){
-            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=0a076478-3fd3-4e2c-b2d2-581876f56d77&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[taluk]=asc&filters[statename]="+state+"&offset="+offset;
+            var api_url = "https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-21841576b2f6?format=json&api-key=579b464db66ec23bdd000001915ff135a4c244e75f6371e952361b24&sort[taluk]=asc&filters[statename]="+state+"&offset="+offset;
         }else{
-            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=0a076478-3fd3-4e2c-b2d2-581876f56d77&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[taluk]=asc&offset="+offset;
+            var api_url = "https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-21841576b2f6?format=json&api-key=579b464db66ec23bdd000001915ff135a4c244e75f6371e952361b24&sort[taluk]=asc&offset="+offset;
         }
         if(offset == 0){
             $("#pincodes li").remove();
