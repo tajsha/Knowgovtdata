@@ -115,11 +115,11 @@
                 if(val['officename'] != "NA"){
                     elements += "<b>Office Name:</b> "+ val['officename']+"<br>";
                 }
-                if(val['officeType'] != "NA"){
-                    elements += "<b>Office Type:</b> "+ val['officeType']+"<br>";
+                if(val['officetype'] != "NA"){
+                    elements += "<b>Office Type:</b> "+ val['officetype']+"<br>";
                 }
-                if(val['Deliverystatus'] != "NA"){
-                    elements += "<b>Delivery Status:</b> "+ val['Deliverystatus']+"<br>";
+                if(val['deliverystatus'] != "NA"){
+                    elements += "<b>Delivery Status:</b> "+ val['deliverystatus']+"<br>";
                 }
                 if(val['divisionname'] != "NA"){
                     elements += "<b>Division Name:</b> "+ val['divisionname']+"<br>";
@@ -130,23 +130,14 @@
                 if(val['circlename'] != "NA"){
                     elements += "<b>Circle Name:</b> "+ val['circlename']+"<br>";
                 }
-                if(val['Taluk'] != "NA"){
-                    elements += "<b>Taluk:</b> "+ val['Taluk']+"<br>";
+                if(val['taluk'] != "NA"){
+                    elements += "<b>Taluk:</b> "+ val['taluk']+"<br>";
                 }
-                if(val['Districtname'] != "NA"){
-                    elements += "<b>District Name:</b> "+ val['Districtname']+"<br>";
+                if(val['districtname'] != "NA"){
+                    elements += "<b>District Name:</b> "+ val['districtname']+"<br>";
                 }
                 if(val['statename'] != "NA"){
                     elements += "<b>State Name:</b> "+ val['statename']+"<br>";
-                }
-                if(val['Telephone'] != "NA"){
-                    elements += "<i class='material-icons prefix'>phone</i> <b>Mobile Number:</b> "+val['Telephone']+"<br>";
-                }
-                if(val['Related Suboffice'] != "NA"){
-                    elements += "<b>Related Suboffice:</b> "+ val['Related Suboffice']+"<br>";
-                }
-                if(val['Related Headoffice'] != "NA"){
-                    elements += "<b>Related Headoffice:</b> "+ val['Related Headoffice']+"<br>";
                 }
                 elements += "</p>";
                 items = items.add( "<li class='collection-item avatar' id='" + key + "'>" + elements + "</li>" );
