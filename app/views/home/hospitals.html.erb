@@ -25,7 +25,6 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <select class="browser-default" id="states" style="width: 100%;"></select>
-          <select class="browser-default" id="districts" style="width: 100%; margin-top: 5px;"></select>
         </div>
         <div class="panel-body">
           <ul class="collection" id="hospitals">
@@ -66,28 +65,14 @@
                         .attr("value",val)
                         .text(val));
     });
-    function updateDistricts(state){
-        $('#districts').find('option').remove();
-        $('#districts').append($("<option></option>").attr("value",'All').text('All Districts'));
-        $.each(districts, function(key, val) {
-            if(state == key){
-                $.each(val, function(index, dist) {
-                    $('#districts')
-                            .append($("<option></option>")
-                                    .attr("value",dist)
-                                    .text(dist));
-                });
-            }
-        });
-    }
 
     function getResult(state, district, offset){
         if(state != 'All' && district != 'All'){
-            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=7d208ae4-5d65-47ec-8cb8-2a7a7ac89f8c&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[Hospitalname]=asc&filters[state]="+state+"&filters[district]="+district+"&offset="+offset;
+            var api_url = "https://api.data.gov.in/resource/98fa254e-c5f8-4910-a19b-4828939b477d?format=json&api-key=579b464db66ec23bdd000001915ff135a4c244e75f6371e952361b24&sort[hospital_name]=asc&filters[state]="+state+"&filters[district]="+district+"&offset="+offset;
         }else if(state != 'All' && district == 'All'){
-            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=7d208ae4-5d65-47ec-8cb8-2a7a7ac89f8c&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[Hospitalname]=asc&filters[state]="+state+"&offset="+offset;
+            var api_url = "https://api.data.gov.in/resource/98fa254e-c5f8-4910-a19b-4828939b477d?format=json&api-key=579b464db66ec23bdd000001915ff135a4c244e75f6371e952361b24&sort[hospitalname]=asc&filters[state]="+state+"&offset="+offset;
         }else{
-            var api_url = "https://data.gov.in/api/datastore/resource.json?resource_id=7d208ae4-5d65-47ec-8cb8-2a7a7ac89f8c&api-key=5f50a64949e68cf3fa3eadb5b1310d81&sort[Hospitalname]=asc&offset="+offset;
+            var api_url = "https://api.data.gov.in/resource/98fa254e-c5f8-4910-a19b-4828939b477d?format=json&api-key=579b464db66ec23bdd000001915ff135a4c244e75f6371e952361b24&offset="+offset;
         }
         if(offset == 0){
             $("#hospitals li").remove();
@@ -96,81 +81,81 @@
             var items = $();
             $.each( data['records'], function( key, val ) {
                 var	elements= "<i class='large material-icons circle red'>local_hospital</i>";
-                if(val['Hospitalname'] != "NA"){
-                    elements += "<span class='title'>"+ val['Hospitalname']+"</span><br>";
+                if(val['hospital_name'] != "NA" && val['hospital_name'] != "0"){
+                    elements += "<span class='title'>"+ val['hospital_name']+"</span><br>";
                 }
                 elements += "<p>";
-                if(val['HospitalCategory'] != "NA"){
-                    elements += "<b>Hospital Category:</b> "+ val['HospitalCategory']+"<br>";
+                if(val['hospital_category'] != "NA" && val['hospital_category'] != "0"){
+                    elements += "<b>Hospital Category:</b> "+ val['hospital_category']+"<br>";
                 }
-                if(val['Hostipalcaretype'] != "NA"){
-                    elements += "<b>Hostipal Caretype:</b> "+ val['Hostipalcaretype']+"<br>";
+                if(val['hospital_care_type'] != "NA" && val['hospital_care_type'] != "0"){
+                    elements += "<b>Hostipal Caretype:</b> "+ val['hospital_care_type']+"<br>";
                 }
-                if(val['SystemsOfMedicine'] != "NA"){
-                    elements += "<b>Systems Of Medicine:</b> "+ val['SystemsOfMedicine']+"<br>";
+                if(val["discipline_systems_of_medicine"] != "NA" && val["discipline_systems_of_medicine"] != "0"){
+                    elements += "<b>Systems Of Medicine:</b> "+ val["discipline_systems_of_medicine"]+"<br>";
                 }
-                if(val['AddressFirstLine'] != "NA"){
-                    elements += val['AddressFirstLine']+"<br>";
+                if(val["address_original_first_line"] != "NA" && val["address_original_first_line"] != "0"){
+                    elements += val["address_original_first_line"]+"<br>";
                 }
-                if(val['State'] != "NA"){
-                    elements += val['State']+"<br>";
+                if(val['state'] != "NA" && val['state'] != "0"){
+                    elements += val['state']+"<br>";
                 }
-                if(val['District'] != "NA"){
-                    elements += val['District']+"<br>";
+                if(val['district'] != "NA" && val['district'] != "0"){
+                    elements += val['district']+"<br>";
                 }
-                if(val['Subdristrict'] != "NA"){
-                    elements += val['Subdristrict']+"<br>";
+                if(val['subdistrict'] != "NA" && val['subdistrict'] != "0"){
+                    elements += val['subdistrict']+"<br>";
                 }
-                if(val['Pincode'] != "NA"){
-                    elements += val['Pincode']+"<br>";
+                if(val['pincode'] != "NA" && val['pincode'] != "0"){
+                    elements += val['pincode']+"<br>";
                 }
-                if(val['Telephone'] != "NA"){
-                    elements += "<i class='material-icons prefix'>phone</i> <b>Telephone:</b> "+val['Telephone']+"<br>";
+                if(val['telephone'] != "NA" && val['telephone'] != "0"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Telephone:</b> "+val['telephone']+"<br>";
                 }
-                if(val['Mobilenumber'] != "NA"){
-                    elements += "<i class='material-icons prefix'>phone</i> <b>Mobile Number:</b> "+val['Mobilenumber']+"<br>";
+                if(val["mobile_number"] != "NA" && val["mobile_number"] != "0"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Mobile Number:</b> "+val["mobile_number"]+"<br>";
                 }
-                if(val['Emergencynum'] != "NA"){
-                    elements += "<i class='material-icons prefix'>phone</i> <b>Emergency Number:</b> "+val['Emergencynum']+"<br>";
+                if(val["emergency_num"] != "NA" && val["emergency_num"] != "0"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Emergency Number:</b> "+val['emergency_num']+"<br>";
                 }
-                if(val['Ambulancephoneno'] != "NA"){
-                    elements += "<i class='material-icons prefix'>phone</i> <b>Ambulance Phoneno:</b> "+val['Ambulancephoneno']+"<br>";
+                if(val["ambulance_phone_no"] != "NA" && val["ambulance_phone_no"] != "0"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Ambulance Phoneno:</b> "+val['ambulance_phone_no']+"<br>";
                 }
-                if(val['Tollfree'] != "NA"){
-                    elements += "<i class='material-icons prefix'>phone</i> <b>Tollfree:</b> "+val['Tollfree']+"<br>";
+                if(val['tollfree'] != "NA" && val['tollfree'] != "0"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Tollfree:</b> "+val['tollfree']+"<br>";
                 }
-                if(val['Helpline'] != "NA"){
-                    elements += "<i class='material-icons prefix'>phone</i> <b>Helpline:</b> "+val['Helpline']+"<br>";
+                if(val['helpline'] != "NA" && val['helpline'] != "0"){
+                    elements += "<i class='material-icons prefix'>phone</i> <b>Helpline:</b> "+val['helpline']+"<br>";
                 }
-                if(val['Hospitalfax'] != "NA"){
-                    elements += "<b>Hospital Fax:</b> "+val['Hospitalfax']+"<br>";
+                if(val['hospital_fax'] != "NA" && val['hospital_fax'] != "0"){
+                    elements += "<b>Hospital Fax:</b> "+val['hospital_fax']+"<br>";
                 }
-                if(val['Hospitalprimaryemailid'] != "NA"){
-                    elements += "<i class='material-icons'>email</i>: "+val['Hospitalprimaryemailid']+"<br>";
+                if(val['hospital_primary_email_id'] != "NA" && val['hospital_primary_email_id'] != "0"){
+                    elements += "<i class='material-icons'>email</i>: "+val['hospital_primary_email_id']+"<br>";
                 }
-                if(val['Hospitalsecondaryemailid'] != "NA"){
-                    elements += "<i class='material-icons'>email</i>: "+val['Hospitalsecondaryemailid']+"<br>";
+                if(val['hospital_secondary_email_id'] != "NA" && val['hospital_secondary_email_id'] != "0"){
+                    elements += "<i class='material-icons'>email</i>: "+val['hospital_secondary_email_id']+"<br>";
                 }
-                if(val['Website'] != "NA"){
-                    elements += "<i class='material-icons'>language</i>: "+val['Website']+"<br>";
+                if(val['website'] != "NA" && val['website'] != "0"){
+                    elements += "<i class='material-icons'>language</i>: "+val['website']+"<br>";
                 }
-                if(val['Specialties'] != "NA"){
-                    elements += "<b>Specialties:</b> "+val['Specialties']+"<br>";
+                if(val['specialties'] != "NA" && val['specialties'] != "0"){
+                    elements += "<b>Specialties:</b> "+val['specialties']+"<br>";
                 }
-                if(val['Facilities'] != "NA"){
-                    elements += "<b>Facilities:</b> "+val['Facilities']+"<br>";
+                if(val['facilities'] != "NA" && val['facilities'] != "0"){
+                    elements += "<b>Facilities:</b> "+val['facilities']+"<br>";
                 }
-                if(val['Totalnumofbeds'] != "NA"){
-                    elements += "<b>Total Number of Beds:</b> "+val['Totalnumofbeds']+"<br>";
+                if(val['total_num_beds'] != "NA" && val['total_num_beds'] != "0"){
+                    elements += "<b>Total Number of Beds:</b> "+val['total_num_beds']+"<br>";
                 }
-                if(val['Googlemapcorridinatelati'] != "NA" && val['Googlemapcorridinatelongi'] != "NA"){
-                    elements += "<i class='material-icons'>place</i>: <a href='https://www.google.com/maps/@"+val['Googlemapcorridinatelati']+","+val['Googlemapcorridinatelongi']+",16z'>Map Location</a><br>";
+                if(val['location_coordinates'] != "NA" && val['location_coordinates'] != "0"){
+                    elements += "<i class='material-icons'>place</i>: <a href='https://www.google.com/maps/@"+val['location_coordinates']+",18z'>Map Location</a><br>";
                 }
                 elements += "</p>";
                 items = items.add( "<li class='collection-item avatar' id='" + key + "'>" + elements + "</li>" );
             });
             $( "#hospitals").append(items);
-            $('#page').val(parseInt(offset)+1);
+            $('#page').val(parseInt(offset)+100);
             if(data['count'] < 100){
                 $('#more').hide();
             }else{
@@ -180,11 +165,10 @@
     }
     getResult('All', 'All', 0);
     $('#more').on('click', function(){
-        getResult($('#states').val(), $('#districts').val(), $('#page').val());
+        getResult('All', 'All', $('#page').val());
     });
     $('#states').on('change', function(){
-        updateDistricts(this.value);
-        getResult($('#states').val(), $('#districts').val(), 0)
+        getResult($('#states').val(), 'All', 0)
     });
 
     $('#districts').on('change', function(){

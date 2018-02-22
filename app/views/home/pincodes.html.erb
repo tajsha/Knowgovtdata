@@ -143,7 +143,7 @@
                 items = items.add( "<li class='collection-item avatar' id='" + key + "'>" + elements + "</li>" );
             });
             $( "#pincodes").append(items);
-            $('#page').val(parseInt(offset)+1);
+            $('#page').val(parseInt(offset)+100);
             if(data['count'] < 100){
                 $('#more').hide();
             }else{
